@@ -1,0 +1,13 @@
+if(DEFINED ENV{CDF_HOME})
+	set(CDF_ROOT $ENV{CDF_HOME})
+elseif(DEFINED ENV{CDF_LIB})
+	set(CDF_ROOT $ENV{CDF_LIB}/..)
+endif()
+
+find_library(CDF_LIBRARY NAMES cdf HINTS ${CDF_ROOT}/lib ENV CDF_LIB)
+find_file(CDF_INC_FILE NAMES cdf.inc HINTS ${CDF_ROOT}/include ENV CDF_INC)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(CDF DEFAULT_MSG CDF_LIBRARY CDF_INC_FILE)
+set(CDF_LIBRARIES ${CDF_LIBRARY})
+get_filename_component(CDF_INCLUDES ${CDF_INC_FILE} DIRECTORY)
+message(STATUS "Inc: ${CDF_INCLUDES}")
