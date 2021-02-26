@@ -45,6 +45,38 @@ module ncix
                               ncix_var_get_float_at_index, &
                               ncix_var_get_double_at_index
 
+        procedure, pass :: ncix_var_get_float_record
+        procedure, pass :: ncix_var_get_float_record_vec
+        procedure, pass :: ncix_var_get_float_record_mat
+        procedure, pass :: ncix_var_get_float_record_ter
+        procedure, pass :: ncix_var_get_double_record
+        procedure, pass :: ncix_var_get_double_record_vec
+        procedure, pass :: ncix_var_get_double_record_mat
+        procedure, pass :: ncix_var_get_double_record_ter
+        procedure, pass :: ncix_var_get_int2_record
+        procedure, pass :: ncix_var_get_int2_record_vec
+        procedure, pass :: ncix_var_get_int2_record_mat
+        procedure, pass :: ncix_var_get_int2_record_ter
+        procedure, pass :: ncix_var_get_int4_record
+        procedure, pass :: ncix_var_get_int4_record_vec
+        procedure, pass :: ncix_var_get_int4_record_mat
+        procedure, pass :: ncix_var_get_int4_record_ter
+        generic :: get_record => ncix_var_get_float_record, &
+                            ncix_var_get_float_record_vec, &
+                            ncix_var_get_float_record_mat, &
+                            ncix_var_get_float_record_ter, &
+                            ncix_var_get_double_record, &
+                            ncix_var_get_double_record_vec, &
+                            ncix_var_get_double_record_mat, &
+                            ncix_var_get_double_record_ter, &
+                            ncix_var_get_int2_record, &
+                            ncix_var_get_int2_record_vec, &
+                            ncix_var_get_int2_record_mat, &
+                            ncix_var_get_int2_record_ter, &
+                            ncix_var_get_int4_record, &
+                            ncix_var_get_int4_record_vec, &
+                            ncix_var_get_int4_record_mat, &
+                            ncix_var_get_int4_record_ter
     end type
     
 contains
@@ -80,39 +112,7 @@ contains
         if (status .ne. CDF_OK) return
     end subroutine
 
-    subroutine ncix_get_var_by_name(this, name, var, status)
-        class(CDF), intent(in) :: this
-        character(len=*), intent(in) :: name
-        type(CDFVar), intent(out) :: var
-        integer, intent(out) :: status
-        integer*4 CDF_get_var_num
-
-        var%cdf = this
-        status = CDF_get_var_num(this%id, name)
-        var%id = status
-        var%name = name
-        if (status .ge. 0) status = CDF_OK
-        if (status .eq. CDF_OK) call var%init(status)
-    end subroutine
-
-    subroutine ncix_get_var_by_id(this, id, var, status)
-        class(CDF), intent(in) :: this
-        integer, intent(in) :: id
-        type(CDFVar), intent(out) :: var
-        integer, intent(out) :: status
-
-        call CDF_get_zvar_name(this%id, id, var%name, status)
-        var%cdf = this
-        var%id = id
-        if (status .eq. CDF_OK) call var%init(status)
-    end subroutine
-
-    subroutine ncix_get_nb_var(this, nb_var, status)
-        class(CDF), intent(in) :: this
-        integer, intent(out) :: nb_var
-        integer, intent(out) :: status
-        call CDF_get_num_zvars(this%id, nb_var, status)
-    end subroutine
+    include "ncix-get.h"
 
     subroutine ncix_var_init(this, status)
         class(CDFVar), intent(inout) :: this
@@ -130,6 +130,9 @@ contains
             if (status .ne. CDF_OK) return
         endif
     end subroutine
+
+    include "ncix-int.h"
+    include "ncix-real.h"
 
     subroutine ncix_var_get_char_at_index(this, index, dim_index, val, status)
         class(CDFVar), intent(inout) :: this
@@ -160,64 +163,6 @@ contains
         endif
     end subroutine
 
-    subroutine ncix_var_get_int2_at_index(this, index, dim_index, val, status)
-        class(CDFVar), intent(inout) :: this
-        integer, intent(in) :: index
-        integer, intent(in) :: dim_index(:)
-        integer(int16), intent(out) :: val
-        integer, intent(out) :: status
-        if (this%data_type .eq. CDF_INT2 &
-            .or. this%data_type .eq. CDF_UINT2) then
-            call CDF_get_zvar_data(this%cdf%id, this%id, index, dim_index, val, status)
-        else
-            status = BAD_DATA_TYPE
-        endif
-    end subroutine
-
-    subroutine ncix_var_get_int4_at_index(this, index, dim_index, val, status)
-        class(CDFVar), intent(inout) :: this
-        integer, intent(in) :: index
-        integer, intent(in) :: dim_index(:)
-        integer(int32), intent(out) :: val
-        integer, intent(out) :: status
-        if (this%data_type .eq. CDF_INT4 &
-            .or. this%data_type .eq. CDF_UINT4) then
-            call CDF_get_zvar_data(this%cdf%id, this%id, index, dim_index, val, status)
-        else
-            status = BAD_DATA_TYPE
-        endif
-    end subroutine
-    
-    subroutine ncix_var_get_float_at_index(this, index, dim_index, val, status)
-        class(CDFVar), intent(inout) :: this
-        integer, intent(in) :: index
-        integer, intent(in) :: dim_index(:)
-        real(real32), intent(out) :: val
-        integer, intent(out) :: status
-        if (this%data_type .eq. CDF_FLOAT &
-            .or. this%data_type .eq. CDF_REAL4) then
-            call CDF_get_zvar_data(this%cdf%id, this%id, index, dim_index, val, status)
-        else
-            status = BAD_DATA_TYPE
-        endif
-    end subroutine
-    
-    subroutine ncix_var_get_double_at_index(this, index, dim_index, val, status)
-        class(CDFVar), intent(inout) :: this
-        integer, intent(in) :: index
-        integer, intent(in) :: dim_index(:)
-        real(real64), intent(out) :: val
-        integer, intent(out) :: status
-        if (this%data_type .eq. CDF_DOUBLE &
-            .or. this%data_type .eq. CDF_REAL8 &
-            .or. this%data_type .eq. CDF_EPOCH &
-            .or. this%data_type .eq. CDF_EPOCH16) then
-            call CDF_get_zvar_data(this%cdf%id, this%id, index, dim_index, val, status)
-        else
-            status = BAD_DATA_TYPE
-        endif
-    end subroutine
-    
     subroutine ncix_var_get_epoch_at_index(this, index, dim_index, val, status)
         class(CDFVar), intent(inout) :: this
         integer, intent(in) :: index
@@ -265,4 +210,5 @@ contains
             status = BAD_DATA_TYPE
         endif
     end subroutine
+    
 end module
