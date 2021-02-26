@@ -4,7 +4,7 @@ project(ncix)
 
 enable_language(Fortran)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 find_package(CDF)
 
 set_source_files_properties(cdf_mod.f90 PROPERTIES Fortran_FORMAT FIXED)
