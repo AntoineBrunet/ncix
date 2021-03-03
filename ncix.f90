@@ -1,5 +1,6 @@
 module ncix
     use iso_fortran_env, int8_t => int8
+    use iso_c_binding
     use cdf_mod, int8 => cdf_int8
     use ncix_epoch
     implicit none
@@ -28,6 +29,7 @@ module ncix
         character(len=CDF_VAR_NAME_LEN256) :: name
     contains
         procedure :: init => ncix_var_init 
+        procedure :: get_record_buffer_size => ncix_var_get_record_buffer_size
         procedure, pass :: ncix_var_get_byte_at_index
         procedure, pass :: ncix_var_get_int2_at_index
         procedure, pass :: ncix_var_get_int4_at_index
@@ -49,34 +51,42 @@ module ncix
         procedure, pass :: ncix_var_get_float_record_vec
         procedure, pass :: ncix_var_get_float_record_mat
         procedure, pass :: ncix_var_get_float_record_ter
+        procedure, pass :: ncix_var_get_float_record_qad
         procedure, pass :: ncix_var_get_double_record
         procedure, pass :: ncix_var_get_double_record_vec
         procedure, pass :: ncix_var_get_double_record_mat
         procedure, pass :: ncix_var_get_double_record_ter
+        procedure, pass :: ncix_var_get_double_record_qad
         procedure, pass :: ncix_var_get_int2_record
         procedure, pass :: ncix_var_get_int2_record_vec
         procedure, pass :: ncix_var_get_int2_record_mat
         procedure, pass :: ncix_var_get_int2_record_ter
+        procedure, pass :: ncix_var_get_int2_record_qad
         procedure, pass :: ncix_var_get_int4_record
         procedure, pass :: ncix_var_get_int4_record_vec
         procedure, pass :: ncix_var_get_int4_record_mat
         procedure, pass :: ncix_var_get_int4_record_ter
+        procedure, pass :: ncix_var_get_int4_record_qad
         generic :: get_record => ncix_var_get_float_record, &
                             ncix_var_get_float_record_vec, &
                             ncix_var_get_float_record_mat, &
                             ncix_var_get_float_record_ter, &
+                            ncix_var_get_float_record_qad, &
                             ncix_var_get_double_record, &
                             ncix_var_get_double_record_vec, &
                             ncix_var_get_double_record_mat, &
                             ncix_var_get_double_record_ter, &
+                            ncix_var_get_double_record_qad, &
                             ncix_var_get_int2_record, &
                             ncix_var_get_int2_record_vec, &
                             ncix_var_get_int2_record_mat, &
                             ncix_var_get_int2_record_ter, &
+                            ncix_var_get_int2_record_qad, &
                             ncix_var_get_int4_record, &
                             ncix_var_get_int4_record_vec, &
                             ncix_var_get_int4_record_mat, &
-                            ncix_var_get_int4_record_ter
+                            ncix_var_get_int4_record_ter, &
+                            ncix_var_get_int4_record_qad
     end type
     
 contains
@@ -130,6 +140,16 @@ contains
             if (status .ne. CDF_OK) return
         endif
     end subroutine
+
+    function ncix_var_get_record_buffer_size(this) result(sze)
+        class(CDFVar), intent(in) :: this
+        integer :: sze
+        integer :: I
+        sze = 1
+        do I=1,this%numdims
+            sze = sze * this%dimsizes(I)
+        enddo
+    end function
 
     include "ncix-int.h"
     include "ncix-real.h"

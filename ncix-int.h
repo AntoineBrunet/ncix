@@ -30,7 +30,7 @@
     subroutine ncix_var_get_int4_record(this, index, val, status)
         class(CDFVar), intent(inout) :: this
         integer, intent(in) :: index
-        integer(int32), intent(out) :: val
+        integer(int32), pointer, intent(out) :: val
         integer, intent(out) :: status
 
         integer, dimension(this%numdims) :: dim_index
@@ -49,31 +49,47 @@
     subroutine ncix_var_get_int4_record_vec(this, index, val, status)
         class(CDFVar), intent(inout) :: this
         integer, intent(in) :: index
-        integer(int32), dimension(:), intent(out) :: val
+        integer(int32), target, dimension(:), intent(out) :: val
         integer, intent(out) :: status
-        call ncix_var_get_int4_record(this, index, val(1), status)
+        integer(int32), pointer :: pval
+        pval => val(1)
+        call ncix_var_get_int4_record(this, index, pval, status)
     end subroutine
     
     subroutine ncix_var_get_int4_record_mat(this, index, val, status)
         class(CDFVar), intent(inout) :: this
         integer, intent(in) :: index
-        integer(int32), intent(out) :: val(:,:)
+        integer(int32), target, intent(out) :: val(:,:)
         integer, intent(out) :: status
-        call ncix_var_get_int4_record(this, index, val(1,1), status)
+        integer(int32), pointer :: pval
+        pval => val(1,1)
+        call ncix_var_get_int4_record(this, index, pval, status)
     end subroutine
     
     subroutine ncix_var_get_int4_record_ter(this, index, val, status)
         class(CDFVar), intent(inout) :: this
         integer, intent(in) :: index
-        integer(int32), intent(out) :: val(:,:,:)
+        integer(int32), target, intent(out) :: val(:,:,:)
         integer, intent(out) :: status
-        call ncix_var_get_int4_record(this, index, val(1,1,1), status)
+        integer(int32), pointer :: pval
+        pval => val(1,1,1)
+        call ncix_var_get_int4_record(this, index, pval, status)
+    end subroutine
+    
+    subroutine ncix_var_get_int4_record_qad(this, index, val, status)
+        class(CDFVar), intent(inout) :: this
+        integer, intent(in) :: index
+        integer(int32), target, intent(out) :: val(:,:,:,:)
+        integer, intent(out) :: status
+        integer(int32), pointer :: pval
+        pval => val(1,1,1,1)
+        call ncix_var_get_int4_record(this, index, pval, status)
     end subroutine
     
     subroutine ncix_var_get_int2_record(this, index, val, status)
         class(CDFVar), intent(inout) :: this
         integer, intent(in) :: index
-        integer(int16), intent(out) :: val
+        integer(int16), pointer, intent(out) :: val
         integer, intent(out) :: status
 
         integer, dimension(this%numdims) :: dim_index
@@ -92,23 +108,39 @@
     subroutine ncix_var_get_int2_record_vec(this, index, val, status)
         class(CDFVar), intent(inout) :: this
         integer, intent(in) :: index
-        integer(int16), dimension(:), intent(out) :: val
+        integer(int16), target, dimension(:), intent(out) :: val
         integer, intent(out) :: status
-        call ncix_var_get_int2_record(this, index, val(1), status)
+        integer(int16), pointer :: pval
+        pval => val(1)
+        call ncix_var_get_int2_record(this, index, pval, status)
     end subroutine
     
     subroutine ncix_var_get_int2_record_mat(this, index, val, status)
         class(CDFVar), intent(inout) :: this
         integer, intent(in) :: index
-        integer(int16), intent(out) :: val(:,:)
+        integer(int16), target, intent(out) :: val(:,:)
         integer, intent(out) :: status
-        call ncix_var_get_int2_record(this, index, val(1,1), status)
+        integer(int16), pointer :: pval
+        pval => val(1,1)
+        call ncix_var_get_int2_record(this, index, pval, status)
     end subroutine
     
     subroutine ncix_var_get_int2_record_ter(this, index, val, status)
         class(CDFVar), intent(inout) :: this
         integer, intent(in) :: index
-        integer(int16), intent(out) :: val(:,:,:)
+        integer(int16), target, intent(out) :: val(:,:,:)
         integer, intent(out) :: status
-        call ncix_var_get_int2_record(this, index, val(1,1,1), status)
+        integer(int16), pointer :: pval
+        pval => val(1,1,1)
+        call ncix_var_get_int2_record(this, index, pval, status)
+    end subroutine
+    
+    subroutine ncix_var_get_int2_record_qad(this, index, val, status)
+        class(CDFVar), intent(inout) :: this
+        integer, intent(in) :: index
+        integer(int16), target, intent(out) :: val(:,:,:,:)
+        integer, intent(out) :: status
+        integer(int16), pointer :: pval
+        pval => val(1,1,1,1)
+        call ncix_var_get_int2_record(this, index, pval, status)
     end subroutine
