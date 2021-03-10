@@ -3,6 +3,9 @@ module ncix
     use iso_c_binding
     use cdf_mod, int8 => cdf_int8
     use ncix_epoch
+#ifdef DATETIME_FORTRAN
+    use datetime_module, only:datetime
+#endif
     implicit none
     public
     integer, parameter :: NCIX_OK = CDF_OK
@@ -38,12 +41,19 @@ module ncix
         procedure, pass :: ncix_var_get_epoch_at_index
         procedure, pass :: ncix_var_get_epoch16_at_index
         procedure, pass :: ncix_var_get_detailepoch_at_index
+#ifdef DATETIME_FORTRAN
+        procedure, pass :: ncix_var_get_datetime_at_index
+#endif
+
         generic :: get_at_index => ncix_var_get_byte_at_index, &
                               ncix_var_get_int2_at_index, &
                               ncix_var_get_int4_at_index, &
                               ncix_var_get_epoch_at_index, &
                               ncix_var_get_epoch16_at_index, &
                               ncix_var_get_detailepoch_at_index, &
+#ifdef DATETIME_FORTRAN
+                              ncix_var_get_datetime_at_index, &
+#endif
                               ncix_var_get_float_at_index, &
                               ncix_var_get_double_at_index
 
@@ -222,7 +232,7 @@ contains
             call this%get_at_index(index, dim_index, epoch_val, status)
             if (status .ne. CDF_OK) return
             call epoch_val%get_details(val)
-        else if (this%data_type .eq. CDF_EPOCH) then
+        else if (this%data_type .eq. CDF_EPOCH16) then
             call this%get_at_index(index, dim_index, epoch16_val, status)
             if (status .ne. CDF_OK) return
             call epoch16_val%get_details(val)
@@ -231,4 +241,25 @@ contains
         endif
     end subroutine
     
+#ifdef DATETIME_FORTRAN
+    subroutine ncix_var_get_datetime_at_index(this, index, dim_index, val, status)
+        class(CDFVar), intent(inout) :: this
+        integer, intent(in) :: index
+        integer, intent(in) :: dim_index(:)
+        type(datetime), intent(out) :: val
+        type(DetailEpoch)   :: epoch_val
+        integer, intent(out) :: status
+        
+        call this%get_at_index(index, dim_index, epoch_val, status)
+        if (status .ne. CDF_OK) return
+        val = datetime(&
+            epoch_val%year,&
+            epoch_val%month,&
+            epoch_val%day,&
+            epoch_val%hour,&
+            epoch_val%minute,&
+            epoch_val%second,&
+            epoch_val%msecond)
+    end subroutine
+#endif
 end module
