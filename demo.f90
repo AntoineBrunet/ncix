@@ -49,5 +49,17 @@ program DEMO
 
     call my_cdf%close(stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+    
+    call my_cdf%create("demo.cdf", stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+
+    call my_cdf%new_var("my_variable", CDF_INT4, shape(image), my_var, stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+    call my_var%add_record(image, stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+
+    call my_cdf%close(stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+    
     write(6,*) "OK"
 end program

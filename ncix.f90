@@ -14,11 +14,13 @@ module ncix
         integer :: id
     contains
         procedure :: open => ncix_open
+        procedure :: create => ncix_create
         procedure :: close => ncix_close
         procedure, pass :: ncix_get_var_by_id
         procedure, pass :: ncix_get_var_by_name
         generic :: get_var =>  ncix_get_var_by_id, ncix_get_var_by_name
         procedure :: get_nb_var => ncix_get_nb_var
+        procedure :: new_var => ncix_new_var 
     end type CDF
 
     type :: CDFVar
@@ -97,18 +99,106 @@ module ncix
                             ncix_var_get_int4_record_mat, &
                             ncix_var_get_int4_record_ter, &
                             ncix_var_get_int4_record_qad
+        
+        procedure, pass :: ncix_var_put_float_record
+        procedure, pass :: ncix_var_put_float_record_vec
+        procedure, pass :: ncix_var_put_float_record_mat
+        procedure, pass :: ncix_var_put_float_record_ter
+        procedure, pass :: ncix_var_put_float_record_qad
+        procedure, pass :: ncix_var_put_double_record
+        procedure, pass :: ncix_var_put_double_record_vec
+        procedure, pass :: ncix_var_put_double_record_mat
+        procedure, pass :: ncix_var_put_double_record_ter
+        procedure, pass :: ncix_var_put_double_record_qad
+        procedure, pass :: ncix_var_put_int2_record
+        procedure, pass :: ncix_var_put_int2_record_vec
+        procedure, pass :: ncix_var_put_int2_record_mat
+        procedure, pass :: ncix_var_put_int2_record_ter
+        procedure, pass :: ncix_var_put_int2_record_qad
+        procedure, pass :: ncix_var_put_int4_record
+        procedure, pass :: ncix_var_put_int4_record_vec
+        procedure, pass :: ncix_var_put_int4_record_mat
+        procedure, pass :: ncix_var_put_int4_record_ter
+        procedure, pass :: ncix_var_put_int4_record_qad
+        generic :: put_record => ncix_var_add_float_record, &
+                            ncix_var_put_float_record_vec, &
+                            ncix_var_put_float_record_mat, &
+                            ncix_var_put_float_record_ter, &
+                            ncix_var_put_float_record_qad, &
+                            ncix_var_put_double_record, &
+                            ncix_var_put_double_record_vec, &
+                            ncix_var_put_double_record_mat, &
+                            ncix_var_put_double_record_ter, &
+                            ncix_var_put_double_record_qad, &
+                            ncix_var_put_int2_record, &
+                            ncix_var_put_int2_record_vec, &
+                            ncix_var_put_int2_record_mat, &
+                            ncix_var_put_int2_record_ter, &
+                            ncix_var_put_int2_record_qad, &
+                            ncix_var_put_int4_record, &
+                            ncix_var_put_int4_record_vec, &
+                            ncix_var_put_int4_record_mat, &
+                            ncix_var_put_int4_record_ter, &
+                            ncix_var_put_int4_record_qad
+        
+        procedure, pass :: ncix_var_add_float_record
+        procedure, pass :: ncix_var_add_float_record_vec
+        procedure, pass :: ncix_var_add_float_record_mat
+        procedure, pass :: ncix_var_add_float_record_ter
+        procedure, pass :: ncix_var_add_float_record_qad
+        procedure, pass :: ncix_var_add_double_record
+        procedure, pass :: ncix_var_add_double_record_vec
+        procedure, pass :: ncix_var_add_double_record_mat
+        procedure, pass :: ncix_var_add_double_record_ter
+        procedure, pass :: ncix_var_add_double_record_qad
+        procedure, pass :: ncix_var_add_int2_record
+        procedure, pass :: ncix_var_add_int2_record_vec
+        procedure, pass :: ncix_var_add_int2_record_mat
+        procedure, pass :: ncix_var_add_int2_record_ter
+        procedure, pass :: ncix_var_add_int2_record_qad
+        procedure, pass :: ncix_var_add_int4_record
+        procedure, pass :: ncix_var_add_int4_record_vec
+        procedure, pass :: ncix_var_add_int4_record_mat
+        procedure, pass :: ncix_var_add_int4_record_ter
+        procedure, pass :: ncix_var_add_int4_record_qad
+        generic :: add_record => ncix_var_add_float_record, &
+                            ncix_var_add_float_record_vec, &
+                            ncix_var_add_float_record_mat, &
+                            ncix_var_add_float_record_ter, &
+                            ncix_var_add_float_record_qad, &
+                            ncix_var_add_double_record, &
+                            ncix_var_add_double_record_vec, &
+                            ncix_var_add_double_record_mat, &
+                            ncix_var_add_double_record_ter, &
+                            ncix_var_add_double_record_qad, &
+                            ncix_var_add_int2_record, &
+                            ncix_var_add_int2_record_vec, &
+                            ncix_var_add_int2_record_mat, &
+                            ncix_var_add_int2_record_ter, &
+                            ncix_var_add_int2_record_qad, &
+                            ncix_var_add_int4_record, &
+                            ncix_var_add_int4_record_vec, &
+                            ncix_var_add_int4_record_mat, &
+                            ncix_var_add_int4_record_ter, &
+                            ncix_var_add_int4_record_qad
     end type
-    
+    integer, parameter :: MAX_NCIX_OPEN_FILES = 100
+    integer, dimension(MAX_NCIX_OPEN_FILES) :: ncix_open_files = -1
+    integer :: ncix_nb_open_files = 0
 contains
 
     subroutine ncix_handle_error(status)
         integer, intent(in) :: status
         character(len=CDF_STATUSTEXT_LEN) ::  message
-        integer :: stat
+        integer :: stat, I
         if (status .eq. CDF_OK) return
         call CDF_error(status, message, stat)
         if (status .lt. CDF_WARN) then
             write(0,*)  trim(message)
+            ! Try to close all ncix files!
+            do I=1, ncix_nb_open_files
+                call CDF_close(ncix_open_files(I), stat)
+            enddo
             stop
         else
             write(0,*)  trim(message)
@@ -121,6 +211,24 @@ contains
         integer, intent(out) :: status
         call CDF_open(filename, this%id, status)
         if (status .ne. CDF_OK) return
+        if (ncix_nb_open_files .lt. MAX_NCIX_OPEN_FILES) then
+            ncix_nb_open_files = ncix_nb_open_files + 1
+            ncix_open_files(ncix_nb_open_files) = this%id
+        endif
+        call CDF_set_zmode(this%id, 2, status)
+        if (status .ne. CDF_OK) return
+    end subroutine
+
+    subroutine ncix_create(this, filename, status)
+        class(CDF), intent(inout) :: this
+        character(LEN=*) , intent(in) :: filename
+        integer, intent(out) :: status
+        call CDF_create(filename, 0, [0], HOST_ENCODING, COLUMN_MAJOR, this%id, status)
+        if (status .ne. CDF_OK) return
+        if (ncix_nb_open_files .lt. MAX_NCIX_OPEN_FILES) then
+            ncix_nb_open_files = ncix_nb_open_files + 1
+            ncix_open_files(ncix_nb_open_files) = this%id
+        endif
         call CDF_set_zmode(this%id, 2, status)
         if (status .ne. CDF_OK) return
     end subroutine
@@ -128,8 +236,16 @@ contains
     subroutine ncix_close(this, status)
         class(CDF), intent(inout) :: this
         integer, intent(out) :: status
+        integer :: I
         call CDF_close(this%id, status)
         if (status .ne. CDF_OK) return
+        do I=1,ncix_nb_open_files
+            if (this%id .eq. ncix_open_files(I)) then
+                ncix_open_files(I) = ncix_open_files(ncix_nb_open_files)
+                ncix_nb_open_files = ncix_nb_open_files - 1
+                exit
+            endif
+        enddo
     end subroutine
 
     include "ncix-get.h"
@@ -177,6 +293,7 @@ contains
             status = BAD_DATA_TYPE
         endif
     end subroutine
+    
 
     subroutine ncix_var_get_byte_at_index(this, index, dim_index, val, status)
         class(CDFVar), intent(inout) :: this
