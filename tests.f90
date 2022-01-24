@@ -3,12 +3,8 @@ program TEST
     implicit none
     type(CDF) :: my_cdf
     type(CDFVar) :: my_var
-    type(CDFEpoch) :: epoch
-    type(CDFEpoch16) :: epoch16
-    type(DetailEpoch) :: d_epoch
     integer :: n,i,j
     integer :: stat
-    integer :: indices(3)
     integer(int32), dimension(:,:), allocatable :: image
     integer(int32), dimension(200) :: img_vec
     real(real32) :: rval
@@ -48,6 +44,7 @@ program TEST
             if (image(I,J) .ne. N) call fail("Error loading matrix")
         enddo
     enddo
+    deallocate(image)
 
     call my_var%get_record(2, img_vec, stat)
     do I=1,200
@@ -116,6 +113,8 @@ program TEST
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
     if (dval .ne. 121.0d0) call fail("double[1,2] should be 121.0d0")
 
+    call my_cdf%close(stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
     write(6,*) "OK"
 contains
     subroutine fail(message) 

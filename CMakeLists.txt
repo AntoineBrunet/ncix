@@ -8,13 +8,12 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}")
 find_package(CDF)
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
-	set(CMAKE_Fortran_FLAGS         "${CMAKE_Fortran_FLAGS} -Wall -cpp -fdefault-real-8")
+	set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wall -Wno-tabs -cpp -fsecond-underscore")
 endif()
 if(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
-	set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -free -fpp -fpconst")
+	set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -free -fpp")
 endif()
 
-set_source_files_properties(cdf_mod.f90 PROPERTIES Fortran_FORMAT FIXED)
 
 set(DATETIME OFF CACHE BOOL "Enable datetime-fortran support")
 if (DATETIME)
@@ -26,7 +25,8 @@ else()
     SET(DATETIME_LIBRARIES "")
 endif()
 
-add_library(ncix ncix.f90 cdf_mod.f90 ncix_epoch.f90)
+set_source_files_properties(cdf_mod.f PROPERTIES Fortran_FORMAT FIXED)
+add_library(ncix ncix.f90 cdf_mod.f ncix_epoch.f90)
 target_include_directories(ncix PUBLIC ${CDF_INCLUDES})
 target_link_libraries(ncix ${CDF_LIBRARIES} ${DATETIME_LIBRARIES})
 

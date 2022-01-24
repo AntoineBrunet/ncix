@@ -3,12 +3,8 @@ program DEMO
     implicit none
     type(CDF) :: my_cdf
     type(CDFVar) :: my_var
-    type(CDFEpoch) :: epoch
-    type(CDFEpoch16) :: epoch16
-    type(DetailEpoch) :: d_epoch
     integer :: n,i
     integer :: stat
-    integer :: indices(3)
     integer(int32), dimension(:,:), allocatable :: image
     integer(int32), dimension(200) :: img_vec
 
