@@ -7,6 +7,10 @@ program TEST
     integer :: stat
     integer(int32), dimension(:,:), allocatable :: image
     integer(int32), dimension(200) :: img_vec
+    
+    type(CDFEpoch) :: cepoch
+    type(DetailEpoch) :: depoch
+    
     real(real32) :: rval
     real(real64) :: dval
 
@@ -90,6 +94,15 @@ program TEST
     call my_var%add_record([111.d0, 112.d0,121.d0,122.d0, 131.d0,132.d0], stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
     if (my_var%numrecs .ne. 2) call fail("Var should have 2 record")
+    
+    call my_cdf%new_var("epoch", CDF_EPOCH, NCIX_NODIM, my_var, stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+    depoch%year = 2022
+    depoch%month = 1
+    depoch%day = 1
+    call cepoch%from_details(depoch)
+    call my_var%put_record(1, cepoch, stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
 
     call my_cdf%close(stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)

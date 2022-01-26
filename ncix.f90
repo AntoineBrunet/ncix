@@ -59,132 +59,265 @@ module ncix
                               ncix_var_get_float_at_index, &
                               ncix_var_get_double_at_index
 
-        procedure, pass :: ncix_var_get_float_record
+        procedure, pass :: ncix_var_get_float_record_sca
         procedure, pass :: ncix_var_get_float_record_vec
         procedure, pass :: ncix_var_get_float_record_mat
         procedure, pass :: ncix_var_get_float_record_ter
         procedure, pass :: ncix_var_get_float_record_qad
-        procedure, pass :: ncix_var_get_double_record
+        procedure, pass :: ncix_var_get_double_record_sca
         procedure, pass :: ncix_var_get_double_record_vec
         procedure, pass :: ncix_var_get_double_record_mat
         procedure, pass :: ncix_var_get_double_record_ter
         procedure, pass :: ncix_var_get_double_record_qad
-        procedure, pass :: ncix_var_get_int2_record
+        procedure, pass :: ncix_var_get_int2_record_sca
         procedure, pass :: ncix_var_get_int2_record_vec
         procedure, pass :: ncix_var_get_int2_record_mat
         procedure, pass :: ncix_var_get_int2_record_ter
         procedure, pass :: ncix_var_get_int2_record_qad
-        procedure, pass :: ncix_var_get_int4_record
+        procedure, pass :: ncix_var_get_int4_record_sca
         procedure, pass :: ncix_var_get_int4_record_vec
         procedure, pass :: ncix_var_get_int4_record_mat
         procedure, pass :: ncix_var_get_int4_record_ter
         procedure, pass :: ncix_var_get_int4_record_qad
-        generic :: get_record => ncix_var_get_float_record, &
+        procedure, pass :: ncix_var_get_epoch_record_sca
+        procedure, pass :: ncix_var_get_epoch_record_vec
+        procedure, pass :: ncix_var_get_epoch_record_mat
+        procedure, pass :: ncix_var_get_epoch_record_ter
+        procedure, pass :: ncix_var_get_epoch_record_qad
+        procedure, pass :: ncix_var_get_epoch16_record_sca
+        procedure, pass :: ncix_var_get_epoch16_record_vec
+        procedure, pass :: ncix_var_get_epoch16_record_mat
+        procedure, pass :: ncix_var_get_epoch16_record_ter
+        procedure, pass :: ncix_var_get_epoch16_record_qad
+#ifdef DATETIME_FORTRAN
+        procedure, pass :: ncix_var_get_datetime_record_sca
+        procedure, pass :: ncix_var_get_datetime_record_vec
+        procedure, pass :: ncix_var_get_datetime_record_mat
+        procedure, pass :: ncix_var_get_datetime_record_ter
+        procedure, pass :: ncix_var_get_datetime_record_qad
+#endif
+        procedure, pass :: ncix_var_get_detailepoch_record_sca
+        procedure, pass :: ncix_var_get_detailepoch_record_vec
+        procedure, pass :: ncix_var_get_detailepoch_record_mat
+        procedure, pass :: ncix_var_get_detailepoch_record_ter
+        procedure, pass :: ncix_var_get_detailepoch_record_qad
+        generic :: get_record => ncix_var_get_float_record_sca, &
                             ncix_var_get_float_record_vec, &
                             ncix_var_get_float_record_mat, &
                             ncix_var_get_float_record_ter, &
                             ncix_var_get_float_record_qad, &
-                            ncix_var_get_double_record, &
+                            ncix_var_get_double_record_sca, &
                             ncix_var_get_double_record_vec, &
                             ncix_var_get_double_record_mat, &
                             ncix_var_get_double_record_ter, &
                             ncix_var_get_double_record_qad, &
-                            ncix_var_get_int2_record, &
+                            ncix_var_get_int2_record_sca, &
                             ncix_var_get_int2_record_vec, &
                             ncix_var_get_int2_record_mat, &
                             ncix_var_get_int2_record_ter, &
                             ncix_var_get_int2_record_qad, &
-                            ncix_var_get_int4_record, &
+                            ncix_var_get_int4_record_sca, &
                             ncix_var_get_int4_record_vec, &
                             ncix_var_get_int4_record_mat, &
                             ncix_var_get_int4_record_ter, &
-                            ncix_var_get_int4_record_qad
+                            ncix_var_get_int4_record_qad, &
+                            ncix_var_get_epoch_record_sca, &
+                            ncix_var_get_epoch_record_vec, &
+                            ncix_var_get_epoch_record_mat, &
+                            ncix_var_get_epoch_record_ter, &
+                            ncix_var_get_epoch_record_qad, &
+                            ncix_var_get_epoch16_record_sca, &
+                            ncix_var_get_epoch16_record_vec, &
+                            ncix_var_get_epoch16_record_mat, &
+                            ncix_var_get_epoch16_record_ter, &
+                            ncix_var_get_epoch16_record_qad, &
+#ifdef DATETIME_FORTRAN
+                            ncix_var_get_datetime_record_sca, &
+                            ncix_var_get_datetime_record_vec, &
+                            ncix_var_get_datetime_record_mat, &
+                            ncix_var_get_datetime_record_ter, &
+                            ncix_var_get_datetime_record_qad, &
+#endif
+                            ncix_var_get_detailepoch_record_sca, &
+                            ncix_var_get_detailepoch_record_vec, &
+                            ncix_var_get_detailepoch_record_mat, &
+                            ncix_var_get_detailepoch_record_ter, &
+                            ncix_var_get_detailepoch_record_qad
         
-        procedure, pass :: ncix_var_put_float_record
+        procedure, pass :: ncix_var_put_float_record_sca
         procedure, pass :: ncix_var_put_float_record_vec
         procedure, pass :: ncix_var_put_float_record_mat
         procedure, pass :: ncix_var_put_float_record_ter
         procedure, pass :: ncix_var_put_float_record_qad
-        procedure, pass :: ncix_var_put_double_record
+        procedure, pass :: ncix_var_put_double_record_sca
         procedure, pass :: ncix_var_put_double_record_vec
         procedure, pass :: ncix_var_put_double_record_mat
         procedure, pass :: ncix_var_put_double_record_ter
         procedure, pass :: ncix_var_put_double_record_qad
-        procedure, pass :: ncix_var_put_int2_record
+        procedure, pass :: ncix_var_put_int2_record_sca
         procedure, pass :: ncix_var_put_int2_record_vec
         procedure, pass :: ncix_var_put_int2_record_mat
         procedure, pass :: ncix_var_put_int2_record_ter
         procedure, pass :: ncix_var_put_int2_record_qad
-        procedure, pass :: ncix_var_put_int4_record
+        procedure, pass :: ncix_var_put_int4_record_sca
         procedure, pass :: ncix_var_put_int4_record_vec
         procedure, pass :: ncix_var_put_int4_record_mat
         procedure, pass :: ncix_var_put_int4_record_ter
         procedure, pass :: ncix_var_put_int4_record_qad
-        generic :: put_record => ncix_var_add_float_record, &
+        procedure, pass :: ncix_var_put_epoch_record_sca
+        procedure, pass :: ncix_var_put_epoch_record_vec
+        procedure, pass :: ncix_var_put_epoch_record_mat
+        procedure, pass :: ncix_var_put_epoch_record_ter
+        procedure, pass :: ncix_var_put_epoch_record_qad
+        procedure, pass :: ncix_var_put_epoch16_record_sca
+        procedure, pass :: ncix_var_put_epoch16_record_vec
+        procedure, pass :: ncix_var_put_epoch16_record_mat
+        procedure, pass :: ncix_var_put_epoch16_record_ter
+        procedure, pass :: ncix_var_put_epoch16_record_qad
+#ifdef DATETIME_FORTRAN
+        procedure, pass :: ncix_var_put_datetime_record_sca
+        procedure, pass :: ncix_var_put_datetime_record_vec
+        procedure, pass :: ncix_var_put_datetime_record_mat
+        procedure, pass :: ncix_var_put_datetime_record_ter
+        procedure, pass :: ncix_var_put_datetime_record_qad
+#endif
+        procedure, pass :: ncix_var_put_detailepoch_record_sca
+        procedure, pass :: ncix_var_put_detailepoch_record_vec
+        procedure, pass :: ncix_var_put_detailepoch_record_mat
+        procedure, pass :: ncix_var_put_detailepoch_record_ter
+        procedure, pass :: ncix_var_put_detailepoch_record_qad
+        generic :: put_record => ncix_var_add_float_record_sca, &
                             ncix_var_put_float_record_vec, &
                             ncix_var_put_float_record_mat, &
                             ncix_var_put_float_record_ter, &
                             ncix_var_put_float_record_qad, &
-                            ncix_var_put_double_record, &
+                            ncix_var_put_double_record_sca, &
                             ncix_var_put_double_record_vec, &
                             ncix_var_put_double_record_mat, &
                             ncix_var_put_double_record_ter, &
                             ncix_var_put_double_record_qad, &
-                            ncix_var_put_int2_record, &
+                            ncix_var_put_int2_record_sca, &
                             ncix_var_put_int2_record_vec, &
                             ncix_var_put_int2_record_mat, &
                             ncix_var_put_int2_record_ter, &
                             ncix_var_put_int2_record_qad, &
-                            ncix_var_put_int4_record, &
+                            ncix_var_put_int4_record_sca, &
                             ncix_var_put_int4_record_vec, &
                             ncix_var_put_int4_record_mat, &
                             ncix_var_put_int4_record_ter, &
-                            ncix_var_put_int4_record_qad
+                            ncix_var_put_int4_record_qad, &
+                            ncix_var_put_epoch_record_sca, &
+                            ncix_var_put_epoch_record_vec, &
+                            ncix_var_put_epoch_record_mat, &
+                            ncix_var_put_epoch_record_ter, &
+                            ncix_var_put_epoch_record_qad, &
+                            ncix_var_put_epoch16_record_sca, &
+                            ncix_var_put_epoch16_record_vec, &
+                            ncix_var_put_epoch16_record_mat, &
+                            ncix_var_put_epoch16_record_ter, &
+                            ncix_var_put_epoch16_record_qad, &
+#ifdef DATETIME_FORTRAN
+                            ncix_var_put_datetime_record_sca, &
+                            ncix_var_put_datetime_record_vec, &
+                            ncix_var_put_datetime_record_mat, &
+                            ncix_var_put_datetime_record_ter, &
+                            ncix_var_put_datetime_record_qad, &
+#endif
+                            ncix_var_put_detailepoch_record_sca, &
+                            ncix_var_put_detailepoch_record_vec, &
+                            ncix_var_put_detailepoch_record_mat, &
+                            ncix_var_put_detailepoch_record_ter, &
+                            ncix_var_put_detailepoch_record_qad
         
-        procedure, pass :: ncix_var_add_float_record
+        procedure, pass :: ncix_var_add_float_record_sca
         procedure, pass :: ncix_var_add_float_record_vec
         procedure, pass :: ncix_var_add_float_record_mat
         procedure, pass :: ncix_var_add_float_record_ter
         procedure, pass :: ncix_var_add_float_record_qad
-        procedure, pass :: ncix_var_add_double_record
+        procedure, pass :: ncix_var_add_double_record_sca
         procedure, pass :: ncix_var_add_double_record_vec
         procedure, pass :: ncix_var_add_double_record_mat
         procedure, pass :: ncix_var_add_double_record_ter
         procedure, pass :: ncix_var_add_double_record_qad
-        procedure, pass :: ncix_var_add_int2_record
+        procedure, pass :: ncix_var_add_int2_record_sca
         procedure, pass :: ncix_var_add_int2_record_vec
         procedure, pass :: ncix_var_add_int2_record_mat
         procedure, pass :: ncix_var_add_int2_record_ter
         procedure, pass :: ncix_var_add_int2_record_qad
-        procedure, pass :: ncix_var_add_int4_record
+        procedure, pass :: ncix_var_add_int4_record_sca
         procedure, pass :: ncix_var_add_int4_record_vec
         procedure, pass :: ncix_var_add_int4_record_mat
         procedure, pass :: ncix_var_add_int4_record_ter
         procedure, pass :: ncix_var_add_int4_record_qad
-        generic :: add_record => ncix_var_add_float_record, &
+        procedure, pass :: ncix_var_add_epoch_record_sca
+        procedure, pass :: ncix_var_add_epoch_record_vec
+        procedure, pass :: ncix_var_add_epoch_record_mat
+        procedure, pass :: ncix_var_add_epoch_record_ter
+        procedure, pass :: ncix_var_add_epoch_record_qad
+        procedure, pass :: ncix_var_add_epoch16_record_sca
+        procedure, pass :: ncix_var_add_epoch16_record_vec
+        procedure, pass :: ncix_var_add_epoch16_record_mat
+        procedure, pass :: ncix_var_add_epoch16_record_ter
+        procedure, pass :: ncix_var_add_epoch16_record_qad
+#ifdef DATETIME_FORTRAN
+        procedure, pass :: ncix_var_add_datetime_record_sca
+        procedure, pass :: ncix_var_add_datetime_record_vec
+        procedure, pass :: ncix_var_add_datetime_record_mat
+        procedure, pass :: ncix_var_add_datetime_record_ter
+        procedure, pass :: ncix_var_add_datetime_record_qad
+#endif
+        procedure, pass :: ncix_var_add_detailepoch_record_sca
+        procedure, pass :: ncix_var_add_detailepoch_record_vec
+        procedure, pass :: ncix_var_add_detailepoch_record_mat
+        procedure, pass :: ncix_var_add_detailepoch_record_ter
+        procedure, pass :: ncix_var_add_detailepoch_record_qad
+        generic :: add_record => ncix_var_add_float_record_sca, &
                             ncix_var_add_float_record_vec, &
                             ncix_var_add_float_record_mat, &
                             ncix_var_add_float_record_ter, &
                             ncix_var_add_float_record_qad, &
-                            ncix_var_add_double_record, &
+                            ncix_var_add_double_record_sca, &
                             ncix_var_add_double_record_vec, &
                             ncix_var_add_double_record_mat, &
                             ncix_var_add_double_record_ter, &
                             ncix_var_add_double_record_qad, &
-                            ncix_var_add_int2_record, &
+                            ncix_var_add_int2_record_sca, &
                             ncix_var_add_int2_record_vec, &
                             ncix_var_add_int2_record_mat, &
                             ncix_var_add_int2_record_ter, &
                             ncix_var_add_int2_record_qad, &
-                            ncix_var_add_int4_record, &
+                            ncix_var_add_int4_record_sca, &
                             ncix_var_add_int4_record_vec, &
                             ncix_var_add_int4_record_mat, &
                             ncix_var_add_int4_record_ter, &
-                            ncix_var_add_int4_record_qad
+                            ncix_var_add_int4_record_qad, &
+                            ncix_var_add_epoch_record_sca, &
+                            ncix_var_add_epoch_record_vec, &
+                            ncix_var_add_epoch_record_mat, &
+                            ncix_var_add_epoch_record_ter, &
+                            ncix_var_add_epoch_record_qad, &
+                            ncix_var_add_epoch16_record_sca, &
+                            ncix_var_add_epoch16_record_vec, &
+                            ncix_var_add_epoch16_record_mat, &
+                            ncix_var_add_epoch16_record_ter, &
+                            ncix_var_add_epoch16_record_qad, &
+#ifdef DATETIME_FORTRAN
+                            ncix_var_add_datetime_record_sca, &
+                            ncix_var_add_datetime_record_vec, &
+                            ncix_var_add_datetime_record_mat, &
+                            ncix_var_add_datetime_record_ter, &
+                            ncix_var_add_datetime_record_qad, &
+#endif
+                            ncix_var_add_detailepoch_record_sca, &
+                            ncix_var_add_detailepoch_record_vec, &
+                            ncix_var_add_detailepoch_record_mat, &
+                            ncix_var_add_detailepoch_record_ter, &
+                            ncix_var_add_detailepoch_record_qad
     end type
     integer, parameter :: MAX_NCIX_OPEN_FILES = 100
     integer, dimension(MAX_NCIX_OPEN_FILES) :: ncix_open_files = -1
     integer :: ncix_nb_open_files = 0
+    integer, dimension(0), parameter :: NCIX_NODIM = 1
 contains
 
     subroutine ncix_handle_error(status)
@@ -248,7 +381,7 @@ contains
         enddo
     end subroutine
 
-    include "ncix-get.h"
+    include "ncix-get.f90"
 
     subroutine ncix_var_init(this, status)
         class(CDFVar), intent(inout) :: this
@@ -277,8 +410,12 @@ contains
         enddo
     end function
 
-    include "ncix-int.h"
-    include "ncix-real.h"
+#include "ncix-int.f90"
+#include "ncix-real.f90"
+#include "ncix-epochs.f90"
+#ifdef DATETIME_FORTRAN
+#include "ncix-datetime.f90"
+#endif
 
     subroutine ncix_var_get_char_at_index(this, index, dim_index, val, status)
         class(CDFVar), intent(inout) :: this
@@ -293,7 +430,6 @@ contains
             status = BAD_DATA_TYPE
         endif
     end subroutine
-    
 
     subroutine ncix_var_get_byte_at_index(this, index, dim_index, val, status)
         class(CDFVar), intent(inout) :: this
@@ -310,73 +446,4 @@ contains
         endif
     end subroutine
 
-    subroutine ncix_var_get_epoch_at_index(this, index, dim_index, val, status)
-        class(CDFVar), intent(inout) :: this
-        integer, intent(in) :: index
-        integer, intent(in) :: dim_index(:)
-        type(CDFEpoch), intent(out) :: val
-        integer, intent(out) :: status
-        if (this%data_type .eq. CDF_EPOCH) then
-            call CDF_get_zvar_data(this%cdf%id, this%id, index, dim_index, val%value, status)
-        else
-            status = BAD_DATA_TYPE
-        endif
-    end subroutine
-    
-    subroutine ncix_var_get_epoch16_at_index(this, index, dim_index, val, status)
-        class(CDFVar), intent(inout) :: this
-        integer, intent(in) :: index
-        integer, intent(in) :: dim_index(:)
-        type(CDFEpoch16), intent(out) :: val
-        integer, intent(out) :: status
-        if (this%data_type .eq. CDF_EPOCH16) then
-            call CDF_get_zvar_data(this%cdf%id, this%id, index, dim_index, val%value, status)
-        else
-            status = BAD_DATA_TYPE
-        endif
-    end subroutine
-    
-    subroutine ncix_var_get_detailepoch_at_index(this, index, dim_index, val, status)
-        class(CDFVar), intent(inout) :: this
-        integer, intent(in) :: index
-        integer, intent(in) :: dim_index(:)
-        type(DetailEpoch), intent(out) :: val
-        type(CDFEpoch)   :: epoch_val
-        type(CDFEpoch16) :: epoch16_val
-        integer, intent(out) :: status
-        
-        if (this%data_type .eq. CDF_EPOCH) then
-            call this%get_at_index(index, dim_index, epoch_val, status)
-            if (status .ne. CDF_OK) return
-            call epoch_val%get_details(val)
-        else if (this%data_type .eq. CDF_EPOCH16) then
-            call this%get_at_index(index, dim_index, epoch16_val, status)
-            if (status .ne. CDF_OK) return
-            call epoch16_val%get_details(val)
-        else 
-            status = BAD_DATA_TYPE
-        endif
-    end subroutine
-    
-#ifdef DATETIME_FORTRAN
-    subroutine ncix_var_get_datetime_at_index(this, index, dim_index, val, status)
-        class(CDFVar), intent(inout) :: this
-        integer, intent(in) :: index
-        integer, intent(in) :: dim_index(:)
-        type(datetime), intent(out) :: val
-        type(DetailEpoch)   :: epoch_val
-        integer, intent(out) :: status
-        
-        call this%get_at_index(index, dim_index, epoch_val, status)
-        if (status .ne. CDF_OK) return
-        val = datetime(&
-            epoch_val%year,&
-            epoch_val%month,&
-            epoch_val%day,&
-            epoch_val%hour,&
-            epoch_val%minute,&
-            epoch_val%second,&
-            epoch_val%msecond)
-    end subroutine
-#endif
 end module
