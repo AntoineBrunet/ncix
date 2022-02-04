@@ -1,5 +1,3 @@
-#define PASTER(x,y,z) x ## _ ## y ## _ ## z
-#define EVALUATOR(x,y,z)  PASTER(x,y,z)
 #define NCIX_GET_(sfx) EVALUATOR(ncix_var_get, NCIX_TYPENAME, sfx)
 #define NCIX_PUT_(sfx) EVALUATOR(ncix_var_put, NCIX_TYPENAME, sfx)
 #define NCIX_ADD_(sfx) EVALUATOR(ncix_var_add, NCIX_TYPENAME, sfx)

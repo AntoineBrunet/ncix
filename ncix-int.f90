@@ -113,8 +113,12 @@
     
 #define NCIX_TYPENAME int2
 #define NCIX_TYPE integer(int16)
-#include "ncix_records_template.f90"
+#define NCIX_TL dtype .eq. CDF_INT2 .or. dtype .eq. CDF_UINT2
+#define NCIX_DTYPE CDF_INT2
+#include "ncix_template.f90"
 
 #define NCIX_TYPENAME int4
 #define NCIX_TYPE integer(int32)
-#include "ncix_records_template.f90"
+#define NCIX_TL dtype .eq. CDF_INT4 .or. dtype .eq. CDF_UINT4
+#define NCIX_DTYPE CDF_INT4
+#include "ncix_template.f90"

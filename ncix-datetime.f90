@@ -66,6 +66,54 @@
         endif
     end subroutine
 
+    subroutine ncix_var_attr_get_datetime_sca(this, name, val, status)
+        class(CDFVar), intent(in) :: this
+        character(len=*), intent(in) :: name
+        type(datetime), intent(out) :: val
+        integer, intent(out) :: status
+        type(DetailEpoch) :: details
+
+        call this%get_attr(name, details, status)
+        if (status .ne. CDF_OK) return
+        call details%get_datetime(val)
+    end subroutine
+    
+    subroutine ncix_var_attr_put_datetime_sca(this, name, val, status)
+        class(CDFVar), intent(in) :: this
+        character(len=*), intent(in) :: name
+        type(datetime), intent(in) :: val
+        integer, intent(out) :: status
+        type(DetailEpoch) :: details
+
+        call details%from_datetime(val)
+        call this%put_attr(name, details, status)
+    end subroutine
+
+    subroutine ncix_attr_get_datetime_sca(this, name, val, status)
+        class(CDF), intent(in) :: this
+        character(len=*), intent(in) :: name
+        type(datetime), intent(out) :: val
+        integer, intent(out) :: status
+        type(DetailEpoch) :: details
+
+        call this%get_attr(name, details, status)
+        if (status .ne. CDF_OK) return
+        call details%get_datetime(val)
+    end subroutine
+    
+    subroutine ncix_attr_put_datetime_sca(this, name, val, status)
+        class(CDF), intent(in) :: this
+        character(len=*), intent(in) :: name
+        type(datetime), intent(in) :: val
+        integer, intent(out) :: status
+        type(DetailEpoch) :: details
+
+        call details%from_datetime(val)
+        call this%put_attr(name, details, status)
+    end subroutine
+
+
 #define NCIX_TYPENAME datetime
 #define NCIX_TYPE type(datetime)
-#include "ncix_records_template.f90"
+#define NCIX_NOATTR
+#include "ncix_template.f90"

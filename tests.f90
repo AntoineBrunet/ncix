@@ -3,10 +3,11 @@ program TEST
     implicit none
     type(CDF) :: my_cdf
     type(CDFVar) :: my_var
-    integer :: n,i,j
+    integer(int32) :: n,i,j
     integer :: stat
     integer(int32), dimension(:,:), allocatable :: image
     integer(int32), dimension(200) :: img_vec
+    character(len=:), allocatable :: txt
     
     type(CDFEpoch) :: cepoch
     type(DetailEpoch) :: depoch
@@ -65,6 +66,12 @@ program TEST
 
     call my_cdf%create('testfile.cdf', stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+
+    call my_cdf%put_attr("version", "1.3.4", stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+    call my_cdf%put_attr("smallest_prime", 2, stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+
     call my_cdf%new_var("real", CDF_REAL4, [3,4], my_var, stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
     if (my_var%numrecs .ne. 0) call fail("New var not empty")
@@ -80,7 +87,12 @@ program TEST
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
     if (my_var%numrecs .ne. 1) call fail("Var should have 1 record")
 
+    call my_var%put_attr("type", "real", stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+
     call my_cdf%new_var("double", CDF_REAL8, [2,3], my_var, stat)
+    call my_var%put_attr("nx", 2, stat)
+    call my_var%put_attr("ny", 3, stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
     if (my_var%numrecs .ne. 0) call fail("New var not empty")
     if (my_var%data_type .ne. CDF_REAL8) call fail("New var wrong type")
@@ -109,12 +121,26 @@ program TEST
 
     call my_cdf%open("testfile.cdf", stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+
+    call my_cdf%get_attr("version", txt, stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+    if (txt .ne. "1.3.4") call fail("version attribute '"//txt//"' should be '1.3.4'")
+    
+    call my_cdf%get_attr("smallest_prime", n, stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+    if (n .ne. 2) call fail("smallest_prime attr should be 2")
+
     call my_cdf%get_var("real", my_var, stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
     if (my_var%numrecs .ne. 1) call fail("Var should have 1 record")
     call my_var%get_at_index(1,[2,3],rval, stat)  
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
     if (rval .ne. 8.0) call fail("real[2,3] should be 8.0")
+    
+    call my_var%get_attr("type", txt, stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+    if (txt .ne. "real") call fail('"'//txt//'" should be "real"')
+    deallocate(txt)
 
     call my_cdf%get_var("double", my_var, stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
@@ -125,6 +151,14 @@ program TEST
     call my_var%get_at_index(2,[1,2],dval, stat)  
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
     if (dval .ne. 121.0d0) call fail("double[1,2] should be 121.0d0")
+
+    call my_var%get_attr("nx", n, stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+    if (n .ne. 2) call fail("nx should be 2")
+    call my_var%get_attr("ny", n, stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+    if (n .ne. 3) call fail("ny should be 3")
+
 
     call my_cdf%close(stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)

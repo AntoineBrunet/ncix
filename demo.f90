@@ -7,6 +7,7 @@ program DEMO
     integer :: stat
     integer(int32), dimension(:,:), allocatable :: image
     integer(int32), dimension(200) :: img_vec
+    character(len=:), allocatable :: str
 
     call my_cdf%open("../data/example1.cdf", stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
@@ -24,6 +25,11 @@ program DEMO
     call my_cdf%get_var("Time", my_var, stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
     write(6,*) trim(my_var%name), " is number", my_var%id
+
+    call my_var%get_attr("UNITS", str, stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
+    write(6,*) 'UNITS is "'//TRIM(str)//'"'
+    deallocate(str)
 
     do i=1,my_var%numrecs
         call my_var%get_at_index(i,[0], n, stat)

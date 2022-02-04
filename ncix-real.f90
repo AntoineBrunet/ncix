@@ -134,10 +134,14 @@
 
 #define NCIX_TYPENAME float
 #define NCIX_TYPE real(real32)
-#include "ncix_records_template.f90"
+#define NCIX_TL dtype .eq. CDF_FLOAT .or. dtype .eq. CDF_REAL4
+#define NCIX_DTYPE CDF_REAL4
+#include "ncix_template.f90"
 
 #define NCIX_TYPENAME double
 #define NCIX_TYPE real(real64)
-#include "ncix_records_template.f90"
+#define NCIX_TL dtype .eq. CDF_DOUBLE .or. dtype .eq. CDF_REAL8
+#define NCIX_DTYPE CDF_REAL8
+#include "ncix_template.f90"
 
 

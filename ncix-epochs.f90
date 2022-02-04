@@ -205,14 +205,139 @@
         endif
     end subroutine
 
+    subroutine ncix_var_attr_get_detailepoch_sca(this, name, val, status)
+        class(CDFVar), intent(in) :: this
+        character(len=*), intent(in) :: name
+        type(DetailEpoch), intent(out) :: val
+        integer, intent(out) :: status
+
+        integer*4 CDF_get_attr_num
+        type(CDFEpoch) :: epoch
+        type(CDFEpoch16) :: epoch16
+        integer :: attr_n, dtype,nelems
+        attr_n = CDF_get_attr_num(this%cdf%id, name)
+        if (attr_n .lt. 0) then
+            status = attr_n
+            return
+        endif
+        call CDF_inquire_attr_zentry(this%cdf%id, attr_n, this%id, dtype, nelems, status)
+        if (status .ne. CDF_OK) return
+        if (dtype .eq. CDF_EPOCH) then
+            call this%get_attr(name, epoch, status)
+            if (status .ne. CDF_OK) return
+            call epoch%get_details(val)  
+        elseif (dtype .eq. CDF_EPOCH16) then
+            call this%get_attr(name, epoch16, status)
+            if (status .ne. CDF_OK) return
+            call epoch16%get_details(val)  
+        else
+            status = BAD_DATA_TYPE
+        endif
+    end subroutine
+
+    subroutine ncix_var_attr_put_detailepoch_sca(this, name, val, status)
+        class(CDFVar), intent(in) :: this
+        character(len=*), intent(in) :: name
+        type(DetailEpoch), intent(in) :: val
+        integer, intent(out) :: status
+
+        integer*4 CDF_get_attr_num
+        type(CDFEpoch) :: epoch
+        type(CDFEpoch16) :: epoch16
+        integer :: attr_n, dtype,nelems
+        attr_n = CDF_get_attr_num(this%cdf%id, name)
+        if (attr_n .eq. NO_SUCH_ATTR) then
+            call CDF_create_attr(this%cdf%id, name, VARIABLE_SCOPE, attr_n, status)
+            if (status .ne. CDF_OK) return
+        endif
+        if (attr_n .lt. 0) then
+            status = attr_n
+            return
+        endif
+        call CDF_inquire_attr_zentry(this%cdf%id, attr_n, this%id, dtype, nelems, status)
+        if (status .ne. CDF_OK) return
+        if ((val%usecond + val%nsecond + val%psecond) .eq. 0) then
+            call epoch%from_details(val)  
+            call CDF_put_attr_zentry(this%cdf%id, attr_n, this%id, CDF_EPOCH, 1, epoch, status)
+        else
+            call epoch16%from_details(val)  
+            call CDF_put_attr_zentry(this%cdf%id, attr_n, this%id, CDF_EPOCH16, 1, epoch16, status)
+        endif
+    end subroutine
+
+    subroutine ncix_attr_get_detailepoch_sca(this, name, val, status)
+        class(CDF), intent(in) :: this
+        character(len=*), intent(in) :: name
+        type(DetailEpoch), intent(out) :: val
+        integer, intent(out) :: status
+
+        integer*4 CDF_get_attr_num
+        type(CDFEpoch) :: epoch
+        type(CDFEpoch16) :: epoch16
+        integer :: attr_n, dtype,nelems
+        attr_n = CDF_get_attr_num(this%id, name)
+        if (attr_n .lt. 0) then
+            status = attr_n
+            return
+        endif
+        call CDF_inquire_attr_gentry(this%id, attr_n, 1, dtype, nelems, status)
+        if (status .ne. CDF_OK) return
+        if (dtype .eq. CDF_EPOCH) then
+            call this%get_attr(name, epoch, status)
+            if (status .ne. CDF_OK) return
+            call epoch%get_details(val)  
+        elseif (dtype .eq. CDF_EPOCH16) then
+            call this%get_attr(name, epoch16, status)
+            if (status .ne. CDF_OK) return
+            call epoch16%get_details(val)  
+        else
+            status = BAD_DATA_TYPE
+        endif
+    end subroutine
+
+    subroutine ncix_attr_put_detailepoch_sca(this, name, val, status)
+        class(CDF), intent(in) :: this
+        character(len=*), intent(in) :: name
+        type(DetailEpoch), intent(in) :: val
+        integer, intent(out) :: status
+
+        integer*4 CDF_get_attr_num
+        type(CDFEpoch) :: epoch
+        type(CDFEpoch16) :: epoch16
+        integer :: attr_n, dtype,nelems
+        attr_n = CDF_get_attr_num(this%id, name)
+        if (attr_n .eq. NO_SUCH_ATTR) then
+            call CDF_create_attr(this%id, name, GLOBAL_SCOPE, attr_n, status)
+            if (status .ne. CDF_OK) return
+        endif
+        if (attr_n .lt. 0) then
+            status = attr_n
+            return
+        endif
+        call CDF_inquire_attr_gentry(this%id, attr_n, 1, dtype, nelems, status)
+        if (status .ne. CDF_OK) return
+        if ((val%usecond + val%nsecond + val%psecond) .eq. 0) then
+            call epoch%from_details(val)  
+            call CDF_put_attr_gentry(this%id, attr_n, 1, CDF_EPOCH, 1, epoch, status)
+        else
+            call epoch16%from_details(val)  
+            call CDF_put_attr_gentry(this%id, attr_n, 1, CDF_EPOCH16, 1, epoch16, status)
+        endif
+    end subroutine
+
 #define NCIX_TYPENAME detailepoch
 #define NCIX_TYPE type(DetailEpoch)
-#include "ncix_records_template.f90"
+#define NCIX_NOATTR 
+#include "ncix_template.f90"
 
 #define NCIX_TYPENAME epoch16
 #define NCIX_TYPE type(CDFEpoch16)
-#include "ncix_records_template.f90"
+#define NCIX_TL dtype .eq. CDF_EPOCH16
+#define NCIX_DTYPE CDF_EPOCH16
+#include "ncix_template.f90"
 
 #define NCIX_TYPENAME epoch
+#define NCIX_TL dtype .eq. CDF_EPOCH
 #define NCIX_TYPE type(CDFEpoch)
-#include "ncix_records_template.f90"
+#define NCIX_DTYPE CDF_EPOCH
+#include "ncix_template.f90"
