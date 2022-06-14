@@ -12,6 +12,7 @@ module ncix
 
     type :: CDF
         integer :: id
+        integer :: majority
     contains
         procedure :: open => ncix_open
         procedure :: create => ncix_create
@@ -139,6 +140,8 @@ contains
             ncix_open_files(ncix_nb_open_files) = this%id
         endif
         call CDF_set_zmode(this%id, 2, status)
+        if (status .ne. CDF_OK) return
+        call CDF_get_majority(this%id, this%majority, status)
         if (status .ne. CDF_OK) return
     end subroutine
 
