@@ -116,6 +116,8 @@ program TEST
     call my_var%put_record(1, cepoch, stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
 
+    call my_cdf%save(stat)
+    if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
     call my_cdf%close(stat)
     if (stat .ne. NCIX_OK) call ncix_handle_error(stat)
 

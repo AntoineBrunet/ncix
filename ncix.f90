@@ -16,6 +16,7 @@ module ncix
     contains
         procedure :: open => ncix_open
         procedure :: create => ncix_create
+        procedure :: save => ncix_save
         procedure :: close => ncix_close
         procedure, pass :: ncix_get_var_by_id
         procedure, pass :: ncix_get_var_by_name
@@ -157,6 +158,14 @@ contains
         endif
         call CDF_set_zmode(this%id, 2, status)
         if (status .ne. CDF_OK) return
+    end subroutine
+
+    subroutine ncix_save(this, status)
+        class(CDF), intent(inout) :: this
+        integer, intent(out) :: status
+        integer * 4, external ::  CDFlib
+        !DEC$ ATTRIBUTES C, ALIAS:'CDFlib' :: CDFlib
+        status = CDFlib(SELECT_, CDF_, this%id, SAVE_, CDF_, NULL_, status)
     end subroutine
 
     subroutine ncix_close(this, status)
